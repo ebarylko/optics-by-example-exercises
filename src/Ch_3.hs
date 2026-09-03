@@ -1,6 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
-module Ch_3 (someFunc,
-             User(..),
+module Ch_3 (User(..),
              fullName)
 where
 
@@ -23,5 +22,3 @@ fullName = lens getFullName setFullName where
   extractLastName = dropWhile (not . isSpace)  >>> drop 1
   toList x y = [x, y]
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
