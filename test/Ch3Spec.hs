@@ -4,7 +4,9 @@ import Ch_3(fullName,
             User(..),
             ProducePrices(..),
             lemonPrice,
-            limePrice)
+            limePrice,
+            lemonPrice',
+            limePrice')
 import Control.Lens
 import Test.Hspec
 
@@ -29,3 +31,9 @@ spec =  do
     it "results in setting the corresponding price to zero" $ do
       set limePrice (-1) prices `shouldBe` ProducePrices  0 1.48
       set lemonPrice (-1) prices `shouldBe` ProducePrices  1.50 0
+
+
+  describe "Setting the price of a lime or a lemon such that is more than 50 cents cheaper/expensive than the other" $ do
+    it "results in adjusting the price of the lemon/lime such it is exactly 50 cents cheaper or more expensive than what was changed" $ do
+      set limePrice' (-1) prices `shouldBe` ProducePrices  0 0.5
+      set lemonPrice' (2.50) prices `shouldBe` ProducePrices  2 2.50

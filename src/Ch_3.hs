@@ -3,7 +3,9 @@ module Ch_3 (User(..),
              fullName,
              ProducePrices(..),
              lemonPrice,
-             limePrice)
+             limePrice,
+             lemonPrice',
+             limePrice')
 where
 
 import Data.List(intercalate)
@@ -41,3 +43,13 @@ lemonPrice = lens getLemonPrice setLemonPrice
     getLemonPrice = _lemonPrice
     setLemonPrice currPrices newPrice = currPrices {_lemonPrice =  max 0 newPrice}
 
+
+
+-- Gets the current prices of lemons/limes and
+-- adjusts the prices of both such that they are always nonnegative and
+-- never more than 50 cents apart
+lemonPrice' :: Lens' ProducePrices Float
+lemonPrice' = error "x"
+
+limePrice' :: Lens' ProducePrices Float
+limePrice' = error "x"
