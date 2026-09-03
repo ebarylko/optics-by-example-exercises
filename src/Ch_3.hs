@@ -15,10 +15,9 @@ data User = User { _firstName :: String
 makeLenses ''User
 
 fullName :: Lens' User String
---fullName = view firstName user (++) " " ++ view lastName user
-fullName = lens getFullName (error "x") where
+fullName = lens getFullName setFullName where
   getFullName = (intercalate " ")  <$>  (toList <$> view firstName  <*> view lastName)
-  setFullName user newFullName = set firstName (extractFirstName newFullName) user & set firstName (extractLastName newFullName)
+  setFullName user newFullName = set firstName (extractFirstName newFullName) user & set lastName (extractLastName newFullName)
   extractFirstName = takeWhile (not . isSpace)
   extractLastName = dropWhile (not . isSpace)
   toList x y = [x, y]
