@@ -1,6 +1,9 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Ch_3 (User(..),
-             fullName)
+             fullName,
+             ProducePrices(..),
+             lemonPrice,
+             limePrice)
 where
 
 import Data.List(intercalate)
@@ -21,4 +24,11 @@ fullName = lens getFullName setFullName where
   extractFirstName = takeWhile (not . isSpace)
   extractLastName = dropWhile (not . isSpace)  >>> drop 1
   toList x y = [x, y]
+
+
+data ProducePrices = ProducePrices { _limePrice :: Float
+                                   , _lemonPrice :: Float} deriving (Show, Eq)
+
+makeLenses ''ProducePrices
+
 
