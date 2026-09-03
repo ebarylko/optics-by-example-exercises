@@ -29,6 +29,11 @@ fullName = lens getFullName setFullName where
 data ProducePrices = ProducePrices { _limePrice :: Float
                                    , _lemonPrice :: Float} deriving (Show, Eq)
 
-makeLenses ''ProducePrices
+limePrice :: Lens' ProducePrices Float
+limePrice = lens getLimePrice setLimePrice
+  where
+    getLimePrice = _limePrice
+    setLimePrice currPrices newPrice = currPrices {_limePrice =  max 0 newPrice}
 
+lemonPrice = error "x"
 
