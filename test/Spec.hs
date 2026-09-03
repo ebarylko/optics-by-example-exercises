@@ -1,5 +1,12 @@
 import Test.Hspec
+import Ch_3(fullName,
+            User(..))
+import Control.Lens
 
+defaultUser = User "John" "Cena" "invisible@example.com"
 
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = hspec $ do
+  describe "viewing the full name of a user" $ do
+    it "is the concatenation of their first and last name" $ do
+      view fullName defaultUser `shouldBe` "John Cena"
