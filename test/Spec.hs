@@ -13,4 +13,4 @@ main = hspec $ do
 
   describe "Setting a new full name of a user of the form firstName remainingPart" $ do
     it "sets the new first name as firstName and the last name as remainingPart" $ do
-      set fullName "Doctor of Thuganomics" defaultUser `shouldBe` User "Doctor" " of Thuganomics" "invisible@example.com"
+      set fullName "Doctor of Thuganomics" defaultUser `shouldBe` User "Doctor" "of Thuganomics" "invisible@example.com"

@@ -7,6 +7,7 @@ where
 import Data.List(intercalate)
 import Control.Lens
 import Data.Char(isSpace)
+import Control.Arrow((>>>))
 
 data User = User { _firstName :: String
                  , _lastName :: String
@@ -19,7 +20,7 @@ fullName = lens getFullName setFullName where
   getFullName = (intercalate " ")  <$>  (toList <$> view firstName  <*> view lastName)
   setFullName user newFullName = set firstName (extractFirstName newFullName) user & set lastName (extractLastName newFullName)
   extractFirstName = takeWhile (not . isSpace)
-  extractLastName = dropWhile (not . isSpace)
+  extractLastName = dropWhile (not . isSpace)  >>> drop 1
   toList x y = [x, y]
 
 someFunc :: IO ()
