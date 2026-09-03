@@ -28,3 +28,4 @@ spec =  do
   describe "Setting the price of a lime or a lemon to a negative value" $ do
     it "results in setting the corresponding price to zero" $ do
       set limePrice (-1) prices `shouldBe` ProducePrices  0 1.48
+      set lemonPrice (-1) prices `shouldBe` ProducePrices  1.50 0

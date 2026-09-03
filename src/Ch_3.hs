@@ -35,5 +35,9 @@ limePrice = lens getLimePrice setLimePrice
     getLimePrice = _limePrice
     setLimePrice currPrices newPrice = currPrices {_limePrice =  max 0 newPrice}
 
-lemonPrice = error "x"
+lemonPrice :: Lens' ProducePrices Float
+lemonPrice = lens getLemonPrice setLemonPrice
+  where
+    getLemonPrice = _lemonPrice
+    setLemonPrice currPrices newPrice = currPrices {_lemonPrice =  max 0 newPrice}
 
