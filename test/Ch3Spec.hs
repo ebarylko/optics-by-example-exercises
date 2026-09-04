@@ -35,6 +35,7 @@ spec =  do
 
   describe "Setting the price of a lime or a lemon such that is more than 50 cents cheaper/expensive than the other" $ do
     it "results in adjusting the price of the lemon/lime such it is exactly 50 cents cheaper or more expensive than what was changed" $ do
-      --set limePrice' (-1) prices `shouldBe` ProducePrices  0 0.5
+      set limePrice' 2 prices `shouldBe` ProducePrices  2 1.5
+      set limePrice' (-1) prices `shouldBe` ProducePrices  0 0.5
       set lemonPrice' (2.50) prices `shouldBe` ProducePrices  2 2.50
       set lemonPrice' (-1) prices `shouldBe` ProducePrices  0.5 0
