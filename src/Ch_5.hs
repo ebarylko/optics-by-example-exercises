@@ -7,6 +7,7 @@ module Ch_5 (Gate(..),
 where
 
 import Control.Lens
+import Control.Arrow((>>>))
 
 data Gate = Gate { _open :: Bool
                  , _oilTemp :: Float}
@@ -22,4 +23,5 @@ data Kingdom = Kingdom { _name :: String,
                          _gate :: Gate} deriving (Show, Eq)
 makeLenses ''Kingdom
 
-lens1 = error "x"
+lens1 :: Kingdom -> Kingdom
+lens1 = name %~ (++ ": a perfect place") >>> army . knights .~ 42 >>> gate . open .~ False
