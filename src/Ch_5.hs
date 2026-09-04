@@ -3,8 +3,8 @@ module Ch_5 (Gate(..),
             Army(..),
             Kingdom(..),
             lens1,
-            lens2
-            )
+            lens2,
+            lens3)
 where
 
 import Control.Lens
@@ -30,3 +30,6 @@ lens1 = name %~ (++ ": a perfect place") >>> army . knights .~ 42 >>> gate . ope
 
 lens2 :: Kingdom -> Kingdom
 lens2 = name %~ (++ "instein") >>> army . knights .~ 26 >>> gate . oilTemp .~ 100 >>> army . archers .~ 17
+
+lens3 :: Kingdom -> (String, Kingdom)
+lens3 = name %~ (++ ": Home") >>> gate . oilTemp .~ 5 >>> name <<%~ (++ " of the talking Donkeys")
