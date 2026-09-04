@@ -2,7 +2,8 @@ module Ch5Spec (spec) where
 import Ch_5(Gate(..),
             Army(..),
             Kingdom(..),
-            lens1)
+            lens1,
+            lens2)
 
 import Test.Hspec
 
@@ -20,3 +21,9 @@ spec = do
                                _army = Army { _archers= 22 , _knights= 42} ,
                                _gate= Gate { _open= False , _oilTemp= 10.0}}
       lens1 duloc `shouldBe` expected
+
+    it "Applying the second lens has the intended effect" $ do
+      let expected = Kingdom { _name= "Dulocinstein" ,
+                               _army = Army { _archers= 17 , _knights= 26} ,
+                               _gate= Gate { _open= True , _oilTemp= 100.0}}
+      lens2 duloc `shouldBe` expected

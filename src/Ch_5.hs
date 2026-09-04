@@ -2,7 +2,8 @@
 module Ch_5 (Gate(..),
             Army(..),
             Kingdom(..),
-            lens1
+            lens1,
+            lens2
             )
 where
 
@@ -25,3 +26,7 @@ makeLenses ''Kingdom
 
 lens1 :: Kingdom -> Kingdom
 lens1 = name %~ (++ ": a perfect place") >>> army . knights .~ 42 >>> gate . open .~ False
+
+
+lens2 :: Kingdom -> Kingdom
+lens2 = name %~ (++ "instein") >>> army . knights .~ 26 >>> gate . oilTemp .~ 100 >>> army . archers .~ 17
