@@ -53,32 +53,8 @@ lemonPrice = lens getLemonPrice setLemonPrice
 -- adjusts the prices of both such that they are always nonnegative and
 -- never more than 50 cents apart
 lemonPrice' :: Lens' ProducePrices Float
-lemonPrice' = lens (view lemonPrice) adjustLemonPrice
-  where
-    adjustLemonPrice currPrices newPrice = set lemonPrice newPrice currPrices & set limePrice (calcNewLimePrice (toNonNegVal newPrice) (view limePrice currPrices))
-    calcNewLimePrice newLemonPrice currLimePrice
-      | isFurtherThan50CentsApartFrom newLemonPrice currLimePrice && canMakeLimesCheaperThanLemons newLemonPrice = calcCheaperLimePrice newLemonPrice
-      | isFurtherThan50CentsApartFrom newLemonPrice currLimePrice && cannotMakeLimesCheaperThanLemons newLemonPrice = calcMoreExpensiveLimePrice newLemonPrice
-      | otherwise = currLimePrice
-    isFurtherThan50CentsApartFrom priceA priceB = abs (priceA - priceB ) > 0.5
-    canMakeLimesCheaperThanLemons = calcCheaperLimePrice >>>  (>= 0)
-    cannotMakeLimesCheaperThanLemons = not . canMakeLimesCheaperThanLemons
-    calcCheaperLimePrice = subtract 0.5
-    calcMoreExpensiveLimePrice = (+ 0.5)
 
 limePrice' :: Lens' ProducePrices Float
---limePrice' = lens (view limePrice) adjustLimePrice
---  where
---    adjustLimePrice currPrices newPrice = set limePrice newPrice currPrices & set lemonPrice (calcNewLemonPrice (toNonNegVal newPrice) (view lemonPrice currPrices))
---    calcNewLemonPrice newLimePrice currLemonPrice
---      | isFurtherThan50CentsApartFrom newLimePrice currLemonPrice && canMakeLemonsCheaperThanLemons newLimePrice = calcCheaperLemonPrice newLimePrice
---      | isFurtherThan50CentsApartFrom newLimePrice currLemonPrice && cannotMakeLemonsCheaperThanLemons newLimePrice = calcMoreExpensiveLemonPrice newLimePrice
---      | otherwise = currLemonPrice
---    isFurtherThan50CentsApartFrom priceA priceB = abs (priceA - priceB ) > 0.5
---    canMakeLemonsCheaperThanLemons = calcCheaperLemonPrice >>>  (>= 0)
---    cannotMakeLemonsCheaperThanLemons = not . canMakeLemonsCheaperThanLemons
---    calcCheaperLemonPrice = subtract 0.5
---    calcMoreExpensiveLemonPrice = (+ 0.5)
 
 -- Takes a lens for the product whose price is being adjusted, the lens for the
 -- other product, and generates a lens that adjusts the price of the first product while
@@ -98,3 +74,4 @@ productPrice principleProductPrice secondaryProductPrice = lens (view principleP
     calcMoreExpensiveSecondaryPrice = (+ 0.5)
 
 limePrice' = productPrice limePrice lemonPrice
+lemonPrice' = productPrice lemonPrice limePrice 
