@@ -4,7 +4,8 @@ import Ch_5(Gate(..),
             Kingdom(..),
             lens1,
             lens2,
-            lens3)
+            lens3,
+            lens4)
 
 import Test.Hspec
 
@@ -35,3 +36,7 @@ spec = do
                                , _army = Army { _archers= 22 , _knights= 14}
                                , _gate= Gate { _open= True , _oilTemp= 5.0}})
       lens3 duloc `shouldBe` expected
+
+    it "Applying the fourth lens has the intended effect" $ do
+      let expected = ((False, "DUDLEY - THE WORST"),20.0)
+      lens4 ((True, "Dudley"), 55.0) `shouldBe` expected
