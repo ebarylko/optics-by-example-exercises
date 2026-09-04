@@ -38,4 +38,9 @@ lens3 :: Kingdom -> (String, Kingdom)
 lens3 = name %~ (++ ": Home") >>> gate . oilTemp .~ 5 >>> name <<%~ (++ " of the talking Donkeys")
 
 lens4 :: ((Bool, String), Float) -> ((Bool, String), Float)
-lens4 = error "x"
+lens4 =
+  _1 . _2 <>~ " - the worst"
+  >>> _2 -~ 15
+  >>> _2 //~ 2
+  >>> _1 . _2 %~ map toUpper
+  >>> _1 . _1 .~ False
