@@ -33,7 +33,7 @@ data ProducePrices = ProducePrices { _limePrice :: Float
                                    , _lemonPrice :: Float} deriving (Show, Eq)
 
 toNonNegVal :: Float -> Float
-toNonNegVal = max 0 
+toNonNegVal = max 0
 
 limePrice :: Lens' ProducePrices Float
 limePrice = lens getLimePrice setLimePrice
@@ -48,6 +48,14 @@ lemonPrice = lens getLemonPrice setLemonPrice
     setLemonPrice currPrices newPrice = currPrices {_lemonPrice =  toNonNegVal newPrice}
 
 
+-- Takes a lens for the product whose price is being adjusted, the lens for the
+-- other product, and generates a lens that adjusts the price of the first product while
+-- making sure the price of the second product is within fifty cents of the new price
+productPrice :: Lens' ProducePrices Float -> Lens' ProducePrices Float -> Lens' ProducePrices Float
+productPrice principleProductPrice secondaryProductPrice = lens (view principleProductPrice) adjustSecondaryProductPrice
+  where
+    adjustSecondaryProductPrice currPrices newPrice = set principleProductPrice newPrice currPrices & set secondaryProductPrice (calcNewSecondaryProductPrice (toNonNegVal newPrice) (view secondaryProductPrice currPrices))
+    calcNewSecondaryProductPrice newPrincipleProductPrice = min (newPrincipleProductPrice + 0.5) >>> max (newPrincipleProductPrice - 0.5)
 
 -- Gets the current prices of lemons/limes and
 -- adjusts the prices of both such that they are always nonnegative and
@@ -56,22 +64,5 @@ lemonPrice' :: Lens' ProducePrices Float
 
 limePrice' :: Lens' ProducePrices Float
 
--- Takes a lens for the product whose price is being adjusted, the lens for the
--- other product, and generates a lens that adjusts the price of the first product while
--- making sure the price of the second product is within fifty cents of the new price
-productPrice :: Lens' ProducePrices Float -> Lens' ProducePrices Float -> Lens' ProducePrices Float
-productPrice principleProductPrice secondaryProductPrice = lens (view principleProductPrice) adjustSecondaryProductPrice
-  where
-    adjustSecondaryProductPrice currPrices newPrice = set principleProductPrice newPrice currPrices & set secondaryProductPrice (calcNewSecondaryProductPrice (toNonNegVal newPrice) (view secondaryProductPrice currPrices))
-    calcNewSecondaryProductPrice newPrincipleProductPrice currSecondaryProductPrice
-      | isFurtherThan50CentsApartFrom newPrincipleProductPrice currSecondaryProductPrice && canMakeSecondaryPriceCheaper newPrincipleProductPrice = calcCheaperSecondaryProductPrice newPrincipleProductPrice
-      | isFurtherThan50CentsApartFrom newPrincipleProductPrice currSecondaryProductPrice && cannotMakeSecondaryPriceCheaper newPrincipleProductPrice = calcMoreExpensiveSecondaryPrice newPrincipleProductPrice
-      | otherwise = currSecondaryProductPrice
-    isFurtherThan50CentsApartFrom priceA priceB = abs (priceA - priceB ) > 0.5
-    calcCheaperSecondaryProductPrice = subtract 0.5
-    canMakeSecondaryPriceCheaper =  calcCheaperSecondaryProductPrice >>> (>= 0)
-    cannotMakeSecondaryPriceCheaper =  canMakeSecondaryPriceCheaper >>> not
-    calcMoreExpensiveSecondaryPrice = (+ 0.5)
-
 limePrice' = productPrice limePrice lemonPrice
-lemonPrice' = productPrice lemonPrice limePrice 
+lemonPrice' = productPrice lemonPrice limePrice
