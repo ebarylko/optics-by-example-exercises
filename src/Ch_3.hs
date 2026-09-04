@@ -1,4 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE RankNTypes #-}
 module Ch_3 (User(..),
              fullName,
              ProducePrices(..),
@@ -66,16 +67,34 @@ lemonPrice' = lens (view lemonPrice) adjustLemonPrice
     calcMoreExpensiveLimePrice = (+ 0.5)
 
 limePrice' :: Lens' ProducePrices Float
-limePrice' = lens (view limePrice) adjustLimePrice
-  where
-    adjustLimePrice currPrices newPrice = set limePrice newPrice currPrices & set lemonPrice (calcNewLemonPrice (toNonNegVal newPrice) (view lemonPrice currPrices))
-    calcNewLemonPrice newLimePrice currLemonPrice
-      | isFurtherThan50CentsApartFrom newLimePrice currLemonPrice && canMakeLemonsCheaperThanLemons newLimePrice = calcCheaperLemonPrice newLimePrice
-      | isFurtherThan50CentsApartFrom newLimePrice currLemonPrice && cannotMakeLemonsCheaperThanLemons newLimePrice = calcMoreExpensiveLemonPrice newLimePrice
-      | otherwise = currLemonPrice
-    isFurtherThan50CentsApartFrom priceA priceB = abs (priceA - priceB ) > 0.5
-    canMakeLemonsCheaperThanLemons = calcCheaperLemonPrice >>>  (>= 0)
-    cannotMakeLemonsCheaperThanLemons = not . canMakeLemonsCheaperThanLemons
-    calcCheaperLemonPrice = subtract 0.5
-    calcMoreExpensiveLemonPrice = (+ 0.5)
+--limePrice' = lens (view limePrice) adjustLimePrice
+--  where
+--    adjustLimePrice currPrices newPrice = set limePrice newPrice currPrices & set lemonPrice (calcNewLemonPrice (toNonNegVal newPrice) (view lemonPrice currPrices))
+--    calcNewLemonPrice newLimePrice currLemonPrice
+--      | isFurtherThan50CentsApartFrom newLimePrice currLemonPrice && canMakeLemonsCheaperThanLemons newLimePrice = calcCheaperLemonPrice newLimePrice
+--      | isFurtherThan50CentsApartFrom newLimePrice currLemonPrice && cannotMakeLemonsCheaperThanLemons newLimePrice = calcMoreExpensiveLemonPrice newLimePrice
+--      | otherwise = currLemonPrice
+--    isFurtherThan50CentsApartFrom priceA priceB = abs (priceA - priceB ) > 0.5
+--    canMakeLemonsCheaperThanLemons = calcCheaperLemonPrice >>>  (>= 0)
+--    cannotMakeLemonsCheaperThanLemons = not . canMakeLemonsCheaperThanLemons
+--    calcCheaperLemonPrice = subtract 0.5
+--    calcMoreExpensiveLemonPrice = (+ 0.5)
 
+-- Takes a lens for the product whose price is being adjusted, the lens for the
+-- other product, and generates a lens that adjusts the price of the first product while
+-- making sure the price of the second product is within fifty cents of the new price
+productPrice :: Lens' ProducePrices Float -> Lens' ProducePrices Float -> Lens' ProducePrices Float
+productPrice principleProductPrice secondaryProductPrice = lens (view principleProductPrice) adjustSecondaryProductPrice
+  where
+    adjustSecondaryProductPrice currPrices newPrice = set principleProductPrice newPrice currPrices & set secondaryProductPrice (calcNewSecondaryProductPrice (toNonNegVal newPrice) (view secondaryProductPrice currPrices))
+    calcNewSecondaryProductPrice newPrincipleProductPrice currSecondaryProductPrice
+      | isFurtherThan50CentsApartFrom newPrincipleProductPrice currSecondaryProductPrice && canMakeSecondaryPriceCheaper newPrincipleProductPrice = calcCheaperSecondaryProductPrice newPrincipleProductPrice
+      | isFurtherThan50CentsApartFrom newPrincipleProductPrice currSecondaryProductPrice && cannotMakeSecondaryPriceCheaper newPrincipleProductPrice = calcMoreExpensiveSecondaryPrice newPrincipleProductPrice
+      | otherwise = currSecondaryProductPrice
+    isFurtherThan50CentsApartFrom priceA priceB = abs (priceA - priceB ) > 0.5
+    calcCheaperSecondaryProductPrice = subtract 0.5
+    canMakeSecondaryPriceCheaper =  calcCheaperSecondaryProductPrice >>> (>= 0)
+    cannotMakeSecondaryPriceCheaper =  canMakeSecondaryPriceCheaper >>> not
+    calcMoreExpensiveSecondaryPrice = (+ 0.5)
+
+limePrice' = productPrice limePrice lemonPrice
