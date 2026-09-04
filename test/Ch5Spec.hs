@@ -1,0 +1,22 @@
+module Ch5Spec (spec) where
+import Ch_5(Gate(..),
+            Army(..),
+            Kingdom(..),
+            lens1)
+
+import Test.Hspec
+
+duloc :: Kingdom
+duloc = Kingdom { _name= "Duloc" ,
+                  _army = Army { _archers= 22 , _knights= 14} ,
+                  _gate= Gate { _open= True , _oilTemp= 10.0}}
+
+spec :: Spec
+
+spec = do
+  describe "Chapter five exercises" $ do
+    it "Applying the first lens has the intended effect" $ do
+      let expected = Kingdom { _name= "Duloc: a perfect place" ,
+                               _army = Army { _archers= 22 , _knights= 42} ,
+                               _gate= Gate { _open= False , _oilTemp= 10.0}}
+      lens1 duloc `shouldBe` expected
