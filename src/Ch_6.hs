@@ -36,7 +36,7 @@ tempsFromFirstThawToNextFreeze = (^.. takingWhile (> 0) tempsAfterFirstFreeze)
 
 
 trimmingWhile :: (a -> Bool) -> Fold s a -> Fold s a
-trimmingWhile predicate f = backwards $ droppingWhile predicate  $ backwards  $ droppingWhile predicate f
+trimmingWhile predicate = backwards . droppingWhile predicate  . backwards  . droppingWhile predicate
 
 tempsFromFirstThawToFinalFreeze :: TemperatureMeasurements -> TemperatureMeasurements
 tempsFromFirstThawToFinalFreeze = (^.. trimmingWhile isFreezing folded)
