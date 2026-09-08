@@ -10,11 +10,13 @@ module Ch_6(numOfDaysUntilFirstThaw,
            Aura(..),
            Move(..),
            namesThatStartWithS,
-           lowestAttackPwrOfAllMoves)
+           lowestAttackPwrOfAllMoves,
+           nameOfFirstCardWithTwoOrMoreMoves)
   where
 
 import Control.Lens
 import Data.List.Lens(prefixed)
+import Control.Arrow((>>>))
 
 type TemperatureMeasurements = [Int]
 numOfDaysUntilFirstThaw :: TemperatureMeasurements -> Int
@@ -70,4 +72,11 @@ namesThatStartWithS :: [Card] -> [String]
 namesThatStartWithS = (^.. folded . filteredBy (name . prefixed "S") . name)
 
 lowestAttackPwrOfAllMoves :: [Card] -> Maybe Int
-lowestAttackPwrOfAllMoves = minimumOf (folded . moves . folded . movePower)
+lowestAttackPwrOfAllMoves = minimumOf (allMoves . movePower)
+  where
+    allMoves = folded . moves . folded
+
+nameOfFirstCardWithTwoOrMoreMoves :: [Card] -> Maybe String
+nameOfFirstCardWithTwoOrMoreMoves = (^? folded . filtered hasAtLeastTwoMoves . name)
+  where
+    hasAtLeastTwoMoves = _moves >>> length >>> (> 1)

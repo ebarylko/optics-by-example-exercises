@@ -9,7 +9,8 @@ import Ch_6(numOfDaysUntilFirstThaw,
            Aura(..),
            Move(..),
            namesThatStartWithS,
-           lowestAttackPwrOfAllMoves)
+           lowestAttackPwrOfAllMoves,
+           nameOfFirstCardWithTwoOrMoreMoves)
 
 import Test.Hspec
 
@@ -63,3 +64,7 @@ spec = do
   describe "Extracting the lowest attack power of all the moves" $ do
     it "Should be 3" $ do
       lowestAttackPwrOfAllMoves deck `shouldBe` Just 3
+
+  describe "Extracting the name of the first card with two or more moves" $ do
+    it "Should be Kapichu" $ do
+      nameOfFirstCardWithTwoOrMoreMoves deck `shouldBe` Just "Kapichu"
