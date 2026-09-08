@@ -1,4 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE RankNTypes #-}
 module Ch_6(numOfDaysUntilFirstThaw,
            warmestTempInFirstFourDays,
            nextTempAfterWarmestTempInFirstFourDays,
@@ -34,5 +35,10 @@ tempsFromFirstThawToNextFreeze = (^.. takingWhile (> 0) tempsAfterFirstFreeze)
     tempsAfterFirstFreeze = droppingWhile (< 0) folded
 
 
+trimmingWhile :: (a -> Bool) -> Fold s a -> Fold s a
+trimmingWhile predicate f = backwards $ droppingWhile predicate  $ backwards  $ droppingWhile predicate f
+
 tempsFromFirstThawToFinalFreeze :: TemperatureMeasurements -> TemperatureMeasurements
-tempsFromFirstThawToFinalFreeze = error "x"
+tempsFromFirstThawToFinalFreeze = (^.. trimmingWhile isFreezing folded)
+  where
+    isFreezing = (< 0)
