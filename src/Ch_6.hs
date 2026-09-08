@@ -3,7 +3,8 @@ module Ch_6(numOfDaysUntilFirstThaw,
            warmestTempInFirstFourDays,
            nextTempAfterWarmestTempInFirstFourDays,
            numOfConsecDaysOfBelowFreezingWeather,
-           tempsFromFirstThawToNextFreeze)
+           tempsFromFirstThawToNextFreeze,
+           tempsFromFirstThawToFinalFreeze)
   where
 
 import Control.Lens
@@ -28,4 +29,10 @@ numOfConsecDaysOfBelowFreezingWeather = lengthOf daysWithFreezingWeather
     daysWithFreezingWeather = takingWhile (< 0) (backwards folded)
 
 tempsFromFirstThawToNextFreeze :: TemperatureMeasurements -> TemperatureMeasurements
-tempsFromFirstThawToNextFreeze = error "x"
+tempsFromFirstThawToNextFreeze = (^.. takingWhile (> 0) tempsAfterFirstFreeze)
+  where
+    tempsAfterFirstFreeze = droppingWhile (< 0) folded
+
+
+tempsFromFirstThawToFinalFreeze :: TemperatureMeasurements -> TemperatureMeasurements
+tempsFromFirstThawToFinalFreeze = error "x"
