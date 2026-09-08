@@ -1,6 +1,7 @@
 module Ch6Spec (spec) where
 import Ch_6(numOfDaysUntilFirstThaw,
-           warmestTempInFirstFourDays)
+           warmestTempInFirstFourDays,
+           nextTempAfterWarmestTempInFirstFourDays)
 
 import Test.Hspec
 
@@ -17,3 +18,7 @@ spec = do
   describe "Calculating the warmest temperature in the first four measurements" $ do
     it "Should be four degrees" $ do
       warmestTempInFirstFourDays tempMeasurements `shouldBe` Just 4
+
+  describe "Calculating the temperature next to the warmest temperature in the first four measurements" $ do
+    it "Should be three degrees" $ do
+      nextTempAfterWarmestTempInFirstFourDays tempMeasurements `shouldBe` Just 3
