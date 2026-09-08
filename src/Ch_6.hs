@@ -13,6 +13,7 @@ module Ch_6(numOfDaysUntilFirstThaw,
   where
 
 import Control.Lens
+import Data.List.Lens(prefixed)
 
 type TemperatureMeasurements = [Int]
 numOfDaysUntilFirstThaw :: TemperatureMeasurements -> Int
@@ -65,4 +66,4 @@ makeLenses ''Card
 makeLenses ''Move
 
 namesThatStartWithS :: [Card] -> [String]
-namesThatStartWithS = error "x"
+namesThatStartWithS = (^.. folded . filteredBy (name . prefixed "S") . name)
