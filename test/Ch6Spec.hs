@@ -8,7 +8,8 @@ import Ch_6(numOfDaysUntilFirstThaw,
            Card(..),
            Aura(..),
            Move(..),
-           namesThatStartWithS)
+           namesThatStartWithS,
+           lowestAttackPwrOfAllMoves)
 
 import Test.Hspec
 
@@ -58,3 +59,7 @@ spec = do
   describe "Extracting the cards whose names start with s" $ do
     it "Should only return the first three names and the last two names" $ do
       namesThatStartWithS deck `shouldBe` ["Skwortul", "Scorchander", "Seedasaur", "Spicyeon", "Sparkeon"]
+
+  describe "Extracting the lowest attack power of all the moves" $ do
+    it "Should be 3" $ do
+      lowestAttackPwrOfAllMoves deck `shouldBe` Just 3

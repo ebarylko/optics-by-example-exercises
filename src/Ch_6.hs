@@ -9,7 +9,8 @@ module Ch_6(numOfDaysUntilFirstThaw,
            Card(..),
            Aura(..),
            Move(..),
-           namesThatStartWithS)
+           namesThatStartWithS,
+           lowestAttackPwrOfAllMoves)
   where
 
 import Control.Lens
@@ -67,3 +68,6 @@ makeLenses ''Move
 
 namesThatStartWithS :: [Card] -> [String]
 namesThatStartWithS = (^.. folded . filteredBy (name . prefixed "S") . name)
+
+lowestAttackPwrOfAllMoves :: [Card] -> Maybe Int
+lowestAttackPwrOfAllMoves = minimumOf (folded . moves . folded . movePower)
