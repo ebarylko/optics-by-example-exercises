@@ -1,7 +1,8 @@
 module Ch6Spec (spec) where
 import Ch_6(numOfDaysUntilFirstThaw,
            warmestTempInFirstFourDays,
-           nextTempAfterWarmestTempInFirstFourDays)
+           nextTempAfterWarmestTempInFirstFourDays,
+           numOfConsecDaysOfBelowFreezingWeather)
 
 import Test.Hspec
 
@@ -22,3 +23,7 @@ spec = do
   describe "Calculating the temperature next to the warmest temperature in the first four measurements" $ do
     it "Should be three degrees" $ do
       nextTempAfterWarmestTempInFirstFourDays tempMeasurements `shouldBe` Just 3
+
+  describe "Calculating the number of consecutive days with freezing weather at the end of the sample" $ do
+    it "Should be two days" $ do
+      numOfConsecDaysOfBelowFreezingWeather tempMeasurements `shouldBe` 2

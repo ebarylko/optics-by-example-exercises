@@ -1,7 +1,8 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Ch_6(numOfDaysUntilFirstThaw,
            warmestTempInFirstFourDays,
-           nextTempAfterWarmestTempInFirstFourDays)
+           nextTempAfterWarmestTempInFirstFourDays,
+           numOfConsecDaysOfBelowFreezingWeather)
   where
 
 import Control.Lens
@@ -17,3 +18,10 @@ nextTempAfterWarmestTempInFirstFourDays :: TemperatureMeasurements -> Maybe Int
 nextTempAfterWarmestTempInFirstFourDays = (^? dropping 1 warmerTemps)
   where
     warmerTemps = droppingWhile (/= 4) folded
+
+-- Calculates the number of consecutive days of below freezing weather
+-- there were starting from the end of the sample
+numOfConsecDaysOfBelowFreezingWeather :: TemperatureMeasurements -> Int
+numOfConsecDaysOfBelowFreezingWeather = lengthOf daysWithFreezingWeather
+  where
+    daysWithFreezingWeather = takingWhile (< 0) (backwards folded)
