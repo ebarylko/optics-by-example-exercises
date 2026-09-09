@@ -11,7 +11,10 @@ module Ch_6(numOfDaysUntilFirstThaw,
            Move(..),
            namesThatStartWithS,
            lowestAttackPwrOfAllMoves,
-           nameOfFirstCardWithTwoOrMoreMoves)
+           nameOfFirstCardWithTwoOrMoreMoves,
+           containsHotCardWith30PlusAttkPwrMove,
+           getNamesOfHoloCardsWithWetAura,
+           cumulativeAttckPwrOfNonLeafyCards)
   where
 
 import Control.Lens
@@ -68,15 +71,30 @@ data Move = Move { _moveName :: String , _movePower :: Int} deriving (Show, Eq)
 makeLenses ''Card
 makeLenses ''Move
 
-namesThatStartWithS :: [Card] -> [String]
+type Deck = [Card]
+
+namesThatStartWithS :: Deck -> [String]
 namesThatStartWithS = (^.. folded . filteredBy (name . prefixed "S") . name)
 
-lowestAttackPwrOfAllMoves :: [Card] -> Maybe Int
+lowestAttackPwrOfAllMoves :: Deck -> Maybe Int
 lowestAttackPwrOfAllMoves = minimumOf (allMoves . movePower)
   where
     allMoves = folded . moves . folded
 
-nameOfFirstCardWithTwoOrMoreMoves :: [Card] -> Maybe String
+nameOfFirstCardWithTwoOrMoreMoves :: Deck -> Maybe String
 nameOfFirstCardWithTwoOrMoreMoves = (^? folded . filtered hasAtLeastTwoMoves . name)
   where
     hasAtLeastTwoMoves = _moves >>> length >>> (> 1)
+
+containsHotCardWith30PlusAttkPwrMove  :: Deck -> Bool
+containsHotCardWith30PlusAttkPwrMove = anyOf hotCardMovesAttckPwr (> 30)
+  where
+    hotCardMovesAttckPwr = folded . filteredBy (aura . only Hot) . moves . folded . movePower
+
+getNamesOfHoloCardsWithWetAura ::  Deck -> [String]
+getNamesOfHoloCardsWithWetAura = (^.. folded . onlyHoloAndWetCards . name)
+  where
+    onlyHoloAndWetCards = filtered _holo . filteredBy (aura . only Wet)
+
+cumulativeAttckPwrOfNonLeafyCards :: Deck -> Int
+cumulativeAttckPwrOfNonLeafyCards = sumOf (folded . filtered (_aura  >>> (/= Leafy)) . moves . folded . movePower)

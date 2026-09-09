@@ -10,7 +10,10 @@ import Ch_6(numOfDaysUntilFirstThaw,
            Move(..),
            namesThatStartWithS,
            lowestAttackPwrOfAllMoves,
-           nameOfFirstCardWithTwoOrMoreMoves)
+           nameOfFirstCardWithTwoOrMoreMoves,
+           containsHotCardWith30PlusAttkPwrMove,
+           getNamesOfHoloCardsWithWetAura,
+           cumulativeAttckPwrOfNonLeafyCards)
 
 import Test.Hspec
 
@@ -68,3 +71,15 @@ spec = do
   describe "Extracting the name of the first card with two or more moves" $ do
     it "Should be Kapichu" $ do
       nameOfFirstCardWithTwoOrMoreMoves deck `shouldBe` Just "Kapichu"
+
+  describe "Checking if there any Hot cards with a move with more than 30 attack power" $ do
+    it "There is at least one such card" $ do
+      containsHotCardWith30PlusAttkPwrMove deck `shouldBe` True
+
+  describe "Extracting the name of all the holo cards that have a wet aura" $ do
+    it "Should only be Garydose" $ do
+      getNamesOfHoloCardsWithWetAura deck `shouldBe` ["Garydose"]
+
+  describe "Calculating the cumulative power of the non leafy cards" $ do
+    it "Should only 303" $ do
+      cumulativeAttckPwrOfNonLeafyCards deck `shouldBe` 303
